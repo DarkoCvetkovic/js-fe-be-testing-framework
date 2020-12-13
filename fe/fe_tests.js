@@ -5,50 +5,42 @@ const path = require('path');
 const { Builder, By, Key, until } = require('selenium-webdriver');
 const FormObject = require('./pageObjects/formObject');
 const FrontendHelper = require('./frontendHelper/frontendHelper');
+const chrome = require('selenium-webdriver/chrome');
 
-var capabilities = {
-    'browserName' : 'chrome',
-    'chromeOptions' : {
-      'args' : [
-          "--disable-plugins",
-          "--window-size=1920x1080",
-          "--headless"
-    ]
-    }
-}
+let chromeCapabilities = new chrome.Options();
+chromeCapabilities.addArguments('disable-infobars');
+chromeCapabilities.addArguments('start-maximized');
 
 describe('UI Automated Test', () => {
     let driver;
-    
-    beforeEach(async () => {
-        driver = await new Builder().withCapabilities(capabilities).build();    
-        await driver.get(url);    
-        // driver.manage().window().maximize();
+
+    beforeEach(async function () {
+        driver = await new Builder().withCapabilities(chromeCapabilities).build();
+        await driver.get(url);
     });
 
-    afterEach(async () => driver.quit());
+    afterEach(() => driver.quit());
 
-    it('Fill and submit “Contact us” form', async () => {       
-        
+    it('Fill and submit “Contact us” form', async () => {
+
         // Using Page Objects
         const formPage = new FormObject(driver);
-        await formPage.submitForm(driver);     
+        await formPage.submitForm(driver);
     });
 
-    xit('Assert “JAVA SCRIPT ALERT” box', async () => {        
-        
+    it('Assert “JAVA SCRIPT ALERT” box', async () => {
         await driver.findElement(By.css("button[onclick='newAlert()']")).click();
 
         var expectedAlertMessage = "Please share this website with your friends and in your organization.";
         let alert = await driver.switchTo().alert();
         var actualAlertMessage = await alert.getText();
-        
+
         // Using Assertion
         assert.strictEqual(expectedAlertMessage, actualAlertMessage);
-        alert.accept();     
+        alert.accept();
     });
 
-    xit('Assert New Message Window', async () => {  
+    it('Assert New Message Window', async () => {
 
         // Make sure we dont have one window open already
         const mainWindow = await driver.getWindowHandle();
@@ -59,22 +51,27 @@ describe('UI Automated Test', () => {
         // Wait for the new window
         await driver.wait(
             async () => (await driver.getAllWindowHandles()).length === 2, 5000);
-        
+
         const windows = await driver.getAllWindowHandles();
 
         //Loop po find new window
         windows.forEach(async handle => {
             if (handle !== mainWindow) {
-              await driver.switchTo().window(handle);
+                await driver.switchTo().window(handle);
             }
         });
         await driver.switchTo().window(mainWindow);
         await driver.wait(until.titleIs('Selenium Framework | Practiceform'), 5000);
     });
 
-    xit('Take a screenshot of entire page', async () => { 
+    it('Take a screenshot of entire page', async () => {
         const helper = new FrontendHelper(driver);
         await helper.takeScreenshot(driver, path.join('screenshots', 'HomePage.png'));
+    });
+
+    it('Assert “Selenium” element', async () => {
+        const element = await driver.findElement(By.partialLinkText('SELENIUM'));
+        assert.notStrictEqual(element, null)
     });
 })
 

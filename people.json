@@ -1,0 +1,26 @@
+[
+    {
+        "name": "John",
+        "lastName": "Petrovich",
+        "occupation": "plumber",
+        "age": "88",
+        "region": "Europe"
+    },
+    {
+        "name": "Mike",
+        "lastName": "Milanovich",
+        "occupation": "Carpenter",
+        "age": "75",
+        "region": "Japan"
+    },
+    {
+        "name": "Mark",
+        "lastName": "Vojvodich",
+        "occupation": "cleaner",
+        "age": "34",
+        "region": "Asia"
+    },
+    {
+        "cookie": "s%3A344q31dCSNaYxPOiELfOm3ceaMTTrBH6.WmfA%2BY5EdINcMbRTlhNjlvQ0Gi1Pi5t0WEm0T%2Brzt"
+    }
+]
